@@ -23,15 +23,17 @@ def login_view(request):
     if request.method == "POST":
 
         # Attempt to sign user in
-        username = request.POST["username"]
-        password = request.POST["password"]
-        user = authenticate(request, username=username, password=password)
+        username = request.data['username']
+        password = request.data['password']
+        user = authenticate(request, username=str(username), password=str(password))
+        print(username)
+        print(user)
 
         # Check if authentication successful
         if user is not None:
             login(request, user)
-            return Response({'Message': 'Login Success'}, status=status.HTTP_200_OK)
+            return Response({'Message': 'Login Successful'}, status=status.HTTP_200_OK)
         else:
             return Response({'Message': 'Login Failed'}, status=status.HTTP_400_BAD_REQUEST)
     else:
-        return Response({'Message': 'Login Request'} )
+        return Response({'Message': 'Username and Password Required'} )
