@@ -4,4 +4,4 @@ from .models import *
 
 admin.site.register(FoodCategory)
 admin.site.register(FoodItem)
-admin.site.register(Vendor)
+

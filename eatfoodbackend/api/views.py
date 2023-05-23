@@ -2,8 +2,8 @@ from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework import generics, status
 from rest_framework.decorators import api_view
-from .models import Vendor
-from .serializers import VendorSerializer
+# from .models import FoodItem, FoodCategory
+# from .serializers import FoodItemSerializer, FoodCategorySerializer
 from django.contrib.auth import authenticate, login, logout
 
 # Create your views here.
@@ -14,9 +14,13 @@ def home(request):
         "data": " Hello From Django Backend"
     })
 
-class VendorsView(generics.ListAPIView):
-    queryset = Vendor.objects.all()
-    serializer_class = VendorSerializer
+# class FoodItemView(generics.ListAPIView):
+#     queryset = FoodItem.objects.all()
+#     serializer_class = FoodItemSerializer
+
+# class FoodCategoryView(generics.ListAPIView):
+#     queryset = FoodCategory.objects.all()
+#     serializer_class = FoodCategorySerializer
 
 @api_view(["GET", "POST"])
 def login_view(request):
