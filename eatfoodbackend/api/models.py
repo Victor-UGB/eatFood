@@ -9,7 +9,7 @@ import datetime
 
 # class User(AbstractUser):
 #     pass
-# default_vendor = FoodVendor.objects.get(id=0)
+
 
 class FoodCategory(models.Model):
     category_name = models.CharField( max_length=50, unique=True, default="")
