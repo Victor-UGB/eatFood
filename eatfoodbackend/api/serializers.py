@@ -26,6 +26,18 @@ class FoodItemSerializer(serializers.ModelSerializer):
         fields = ("fooditem_name", "category", "fooditem_description", "fooditem_price", "fooditem_vendor")
 
 
+class CreateFoodItemSerializer(serializers.ModelSerializer):
+    category= serializers.SlugRelatedField(many=True, slug_field="category_name", queryset=FoodCategory.objects.all())
+    # fooditem_vendor = serializers.PrimaryKeyRelatedField()
+    class Meta:
+        model = FoodItem
+        fields = ("fooditem_name", "category", "fooditem_description",
+                "fooditem_price")
+        
+    # Create method
+    def create():
+        pass
+
 class NewUserForm(UserCreationForm):
     email = forms.EmailField(required=True)
 

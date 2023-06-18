@@ -31,3 +31,4 @@ class FoodItem(models.Model):
     def __str__(self):
         return self.fooditem_name
     
+# Create Rating Class to rate fooditems

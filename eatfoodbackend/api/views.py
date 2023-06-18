@@ -1,13 +1,16 @@
 from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework import generics, status
+from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from .models import FoodItem, FoodCategory
+from vendors.serializers import VendorDetailsSerializer
 from .serializers import *
 from vendors.models import FoodVendor
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.views.decorators.csrf import csrf_exempt
+from django.utils.decorators import method_decorator
 from django.db import IntegrityError
 from django.shortcuts import get_object_or_404
 
@@ -27,6 +30,70 @@ class FoodCategoryView(generics.ListAPIView):
     queryset = FoodCategory.objects.all()
     serializer_class = FoodCategorySerializer
 
+# @method_decorator(csrf_exempt, name="dispatch")
+class CreateFoodItem(APIView):
+    serializers_class = CreateFoodItemSerializer
+    query_set = FoodItem
+
+    def post(self, request):
+        ser = self.serializers_class(data=request.data)
+        print(request.data)
+        print(ser)
+        if ser.is_valid():
+            fooditem_name = ser.data.get("fooditem_price")
+            category = ser.data.get("category")
+            fooditem_description = ser.data.get("fooditem_description")
+            fooditem_price = ser.data.get("fooditem_price")
+            fooditem_vendor = ser.data.get("fooditem_vendor")
+            i = get_object_or_404(FoodCategory, category_name = category[0])
+            print(f"This {i.category_tagline}")
+            print(f"{i.category_food_items.all()}")
+            print(category)
+            
+            new_food_item = FoodItem()
+            return Response({"data": "create food api functional"})
+        return Response({"data": ser.errors})
+    
+
+@api_view(["GET", "POST"])
+def get_category(request):
+    serializer_class = FoodCategorySerializer
+
+    if request.method == "POST":
+        serialiized_data = serializer_class(data=request.data)
+        if serialiized_data.is_valid():
+            # get category from serialized data
+            category = serialiized_data.data.get("category_name")
+            # query for all food_items in category
+            category = FoodCategory.objects.filter(category_name= category)
+            food_items = category.category_food_item.all()
+
+    elif request.method == "GET":
+        id = request.GET.get("id")
+        queryset = FoodCategory.objects.all()
+        if id:
+            pass
+        
+        return Response({"data": serializer_class(queryset, many=True).data})
+
+
+@api_view(["GET", "POST"])
+def get_vendor(request):
+    serializer_class = VendorSerializer
+
+    if request.method == "POST":
+        serialized_data = serializer_class(data=request.data)
+        if serialized_data.is_valid():
+            vendor = serialized_data.data.get()
+
+    elif request.method == "GET":
+        id = request.GET.get("id")
+        queryset = FoodVendor.objects.all()
+        
+        if id:
+            pass
+
+        return Response({"data": serializer_class(queryset, many=True).data})
 
 @api_view(["GET", "POST"])
 def food_item(request, *args, **kwargs):
@@ -65,6 +132,22 @@ def food_item(request, *args, **kwargs):
     
     #Handle Other Request types
     return Response({'Bad Request': "Invalid request"}, status=status.HTTP_400_BAD_REQUEST)
+
+def order_food_item(request):
+    serializer_class = "" #Food Item Serializer?
+
+    if request.method == "POST":
+        serialized_data = serializer_class(data=request.data)
+        if serialized_data.is_valid():
+            items = serialized_data.data.get()
+            user = serialized_data.data.get()
+            # Check if there is more than one item
+            vendors = serialized_data.data.get()
+            # Call the order food function
+
+
+
+
     
 def user_logged_in(request):
     pass
@@ -108,7 +191,7 @@ def register(request):
             password = request_serialized.data.get("password")
             confirmation = request.data.get("password2")
             if password != confirmation:
-                return Response({"Warning": "Passwordsdo not match"})
+                return Response({"Warning": "Passwords do not match"})
             try:
                 user = User.objects.create_user(username, email, password)
                 user.save()
