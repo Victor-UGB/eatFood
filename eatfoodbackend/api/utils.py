@@ -33,6 +33,8 @@ def order_food(request_list, request_user):
 def create_food_item(fooditem_name, category, fooditem_description, fooditem_price, fooditem_vendor):
     pass
 
+def trending():
+    pass
 
 def get_food_item(request_item):
     item = FoodItem.objects.filter(id= request_item)

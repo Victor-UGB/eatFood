@@ -51,3 +51,8 @@ class NewUserForm(UserCreationForm):
         if commit:
             user.save()
         return user
+
+class OrderFoodItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model =FoodItem
+        

@@ -146,7 +146,9 @@ def order_food_item(request):
             # Call the order food function
 
 
-
+# Trending meals
+def get_trending(request):
+    pass
 
     
 def user_logged_in(request):
